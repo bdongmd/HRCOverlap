@@ -13,10 +13,10 @@ f_output = ROOT.TFile.Open(args.output, 'RECREATE')
 tree = ROOT.TTree('overlap','overlap')
 f_output.cd()
 run_number = array('i', [0]) 
-event_number = array('i', [0])
+event_number = array('q', [0])
 m_jj = array('f', [0])
 tree.Branch('run_number', run_number, 'run_number/I')
-tree.Branch('event_number', event_number, 'event_number/I')
+tree.Branch('event_number', event_number, 'event_number/L')
 tree.Branch('m_jj', m_jj, 'm_jj/F')
 
 for j in range(4):
