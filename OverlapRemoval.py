@@ -18,6 +18,7 @@ for line in lines:
 	tmplist = [int(tmplist[0]), int(tmplist[1])]
 	overlapList[i_line] = tmplist
 	i_line = i_line + 1
+overlapList = overlapList.tolist()
 
 f_output = ROOT.TFile.Open(args.output, 'RECREATE')
 tree = ROOT.TTree('overlap','overlap')
