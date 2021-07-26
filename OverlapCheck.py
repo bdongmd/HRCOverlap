@@ -26,14 +26,13 @@ for j in range(4):
 	dijetTree = f_dijet.Get('overlap')
 	dibjetTree = f_dibjet.Get('overlap')
 
-	diblist = np.array([])
+	diblist = np.empty([dibjetTree.GetEntries(), 2], dtype=np.int64)
 	for i in range(0,dibjetTree.GetEntries()):
 		dibjetTree.GetEntry(i)
 		tmplist =  [getattr(dibjetTree, 'run_number'), getattr(dibjetTree, 'event_number')]
-		diblist = np.append(diblist, tmplist)
+		diblist[i] = tmplist
 		if i % 20000 == 0:
 			print('processed {} events'.format(i))
-	diblist = diblist.reshape(-1,2)
 
 	for i in range(0, dijetTree.GetEntries()):
 		dijetTree.GetEntry(i)
