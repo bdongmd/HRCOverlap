@@ -10,8 +10,6 @@ args = parser.parse_args()
 
 f_txt = open('overlapList/DijetOverlaps.txt', 'r')
 lines = f_txt.readlines()
-f_dijet = ROOT.TFile.Open('inputData/dijet_removedDib.root','r')
-dijetTree = f_dijet.Get('overlap')
 
 overlapList = np.empty([len(lines), 2], dtype=np.int64)
 i_line = 0
@@ -31,18 +29,23 @@ tree.Branch('run_number', run_number, 'run_number/I')
 tree.Branch('event_number', event_number, 'event_number/L')
 tree.Branch('m_jj', m_jj, 'm_jj/F')
 
-for i in range(0, dijetTree.GetEntries()):
-	dijetTree.GetEntry(i)
-	tmplist =  [getattr(dijetTree, 'run_number'), getattr(dijetTree, 'event_number')]
-	if i % 100000 == 0:
-		print('{}: processed {} events'.format(datetime.now().strftime('%H:%M:%S'),i))
-	if tmplist in overlapList:
-		continue
-	run_number[0] = getattr(dijetTree, 'run_number')
-	event_number[0] =  getattr(dijetTree, 'event_number')
-	m_jj[0] = getattr(dijetTree, 'm_jj')
-	tree.Fill()
+for year in range(15,19):
+	f_dijet = ROOT.TFile.Open('inputData/dijetData{}_removedDib.root'.format(year),'r')
+	dijetTree = f_dijet.Get('overlap')
 
-tree.Write("", ROOT.TObject.kOverwrite);
+	for i in range(0, dijetTree.GetEntries()):
+		dijetTree.GetEntry(i)
+		tmplist =  [getattr(dijetTree, 'run_number'), getattr(dijetTree, 'event_number')]
+		if i % 100000 == 0:
+			print('{}: processed {} events'.format(datetime.now().strftime('%H:%M:%S'),i))
+		if tmplist in overlapList:
+			continue
+		run_number[0] = getattr(dijetTree, 'run_number')
+		event_number[0] =  getattr(dijetTree, 'event_number')
+		m_jj[0] = getattr(dijetTree, 'm_jj')
+		tree.Fill()
+	f_dijet.Close()
+
+tree.Write()
 f_output.Close()
 
