@@ -5,6 +5,8 @@ __pycache__/
 
 # input root file
 inputData/*
+condorSubmit/log/*
+output/*
 
 # C extensions
 *.so
