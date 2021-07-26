@@ -31,20 +31,20 @@ for j in range(4):
 		dibjetTree.GetEntry(i)
 		tmplist =  [getattr(dibjetTree, 'run_number'), getattr(dibjetTree, 'event_number')]
 		diblist[i] = tmplist
-		if i % 20000 == 0:
+		if i % 100000 == 0:
 			print('processed {} events'.format(i))
 
 	for i in range(0, dijetTree.GetEntries()):
 		dijetTree.GetEntry(i)
 		tmplist =  [getattr(dijetTree, 'run_number'), getattr(dijetTree, 'event_number')]
+		if i % 200000 == 0:
+			print('{}: processed {} events'.format(datetime.now().strftime('%H:%M:%S'),i))
 		if tmplist in diblist:
 			continue
 		run_number[0] = getattr(dijetTree, 'run_number')
 		event_number[0] =  getattr(dijetTree, 'event_number')
 		m_jj[0] = getattr(dijetTree, 'm_jj')
 		tree.Fill()
-		if i % 50000 == 0:
-			print('{}: processed {} events'.format(datetime.now().strftime('%H:%M:%S'),i))
 
 tree.Write("", ROOT.TObject.kOverwrite);
 f_output.Close()
