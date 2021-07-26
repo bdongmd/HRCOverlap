@@ -33,12 +33,12 @@ for j in range(4):
 		diblist = np.append(diblist, tmplist)
 		if i % 20000 == 0:
 			print('processed {} events'.format(i))
+	diblist = diblist.reshape(-1,2)
 
 	for i in range(0, dijetTree.GetEntries()):
 		dijetTree.GetEntry(i)
 		tmplist =  [getattr(dijetTree, 'run_number'), getattr(dijetTree, 'event_number')]
 		if tmplist in diblist:
-			print("kicking out an event!")
 			continue
 		run_number[0] = getattr(dijetTree, 'run_number')
 		event_number[0] =  getattr(dijetTree, 'event_number')
