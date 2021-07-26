@@ -36,12 +36,14 @@ for i in range(0,dibjetTree.GetEntries()):
 		print('processed {} events'.format(i))
 f_dibjet.Close()
 
+diblist = diblist.tolist()
 for i in range(0, dijetTree.GetEntries()):
 	dijetTree.GetEntry(i)
 	tmplist =  [getattr(dijetTree, 'run_number'), getattr(dijetTree, 'event_number')]
 	if i % 100000 == 0:
 		print('{}: processed {} events'.format(datetime.now().strftime('%H:%M:%S'),i))
 	if tmplist in diblist:
+		print("kicking out an event")
 		continue
 	run_number[0] = getattr(dijetTree, 'run_number')
 	event_number[0] =  getattr(dijetTree, 'event_number')
