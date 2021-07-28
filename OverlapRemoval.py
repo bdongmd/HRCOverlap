@@ -35,8 +35,7 @@ for year in range(15,19):
 	f_dijet = ROOT.TFile.Open('inputData/dibjetData{}.root'.format(year),'r')
 	dijetTree = f_dijet.Get('overlap')
 
-	for i in range(0, 10):
-	#for i in range(0, dijetTree.GetEntries()):
+	for i in range(0, dijetTree.GetEntries()):
 		dijetTree.GetEntry(i)
 		tmplist =  [getattr(dijetTree, 'run_number'), getattr(dijetTree, 'event_number')]
 		if i % 50000 == 0:
