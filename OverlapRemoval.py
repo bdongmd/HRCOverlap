@@ -8,6 +8,9 @@ parser = argparse.ArgumentParser(description='output file')
 parser.add_argument('-o', '--output', type=str)
 args = parser.parse_args()
 
+isDib = True
+isDib2bchannel = False
+
 f_txt = open('overlapList/DijetOverlaps.txt', 'r')
 lines = f_txt.readlines()
 
@@ -22,17 +25,20 @@ overlapList = overlapList.tolist()
 
 f_output = ROOT.TFile.Open(args.output, 'RECREATE')
 tree = ROOT.TTree('overlap','overlap')
-f_output.cd()
 run_number = array('i', [0]) 
+region = array('i',[0])
 event_number = array('q', [0])
 m_jj = array('f', [0])
 tree.Branch('run_number', run_number, 'run_number/I')
 tree.Branch('event_number', event_number, 'event_number/L')
 tree.Branch('m_jj', m_jj, 'm_jj/F')
+tree.Branch('region', region, 'region/F')
 
 for year in range(15,19):
-	#f_dijet = ROOT.TFile.Open('inputData/dijetData{}_removedDib.root'.format(year),'r')
-	f_dijet = ROOT.TFile.Open('inputData/dibjetData{}.root'.format(year),'r')
+	if not isDib:
+		f_dijet = ROOT.TFile.Open('inputData/dijet_Data{}_removeddib.root'.format(year),'r')
+	else:
+		f_dijet = ROOT.TFile.Open('inputData/dibjet_Data{}.root'.format(year),'r')
 	dijetTree = f_dijet.Get('overlap')
 
 	for i in range(0, dijetTree.GetEntries()):
@@ -40,6 +46,10 @@ for year in range(15,19):
 		tmplist =  [getattr(dijetTree, 'run_number'), getattr(dijetTree, 'event_number')]
 		if i % 50000 == 0:
 			print('{}: processed {} / {} events'.format(datetime.now().strftime('%H:%M:%S'),i, dijetTree.GetEntries()))
+		dijetTree.GetEntry(i)
+		if isDib2bchannel and len(getattr(dijetTree, 'region')) == 1:
+			continue
+		tmplist =  [getattr(dijetTree, 'run_number'), getattr(dijetTree, 'event_number')]
 		if tmplist in overlapList:
 			continue
 		run_number[0] = getattr(dijetTree, 'run_number')
@@ -48,6 +58,7 @@ for year in range(15,19):
 		tree.Fill()
 	f_dijet.Close()
 
+f_output.cd()
 tree.Write()
 f_output.Close()
 

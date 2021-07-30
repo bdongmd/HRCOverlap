@@ -28,7 +28,7 @@ void MakeNtuple(){
 	}
 	cout << "total number of events = " << t1->GetEntries() << endl;
 	
-	TFile *output = new TFile("dijet_Data18.root","RECREATE");
+	TFile *output = new TFile("dibjet_Data18.root","RECREATE");
 
 	int runNumber = 0;
 	Long64_t eventNumber=0;
@@ -86,7 +86,7 @@ void MakeNtuple(){
 		region.clear();
 	
 		// Clear and set as many regions as needed.
-
+/*
 		if(jet_pt->at(0)<420)
 			continue;
 		Npt += 1;
@@ -96,8 +96,14 @@ void MakeNtuple(){
 		if(mjj<=1100)
 			continue;
 		Nmjj +=1;
-/*
+*/
 // di-b channel selection
+
+		double jet_DL1r_leading = log(jet_DL1r_pb->at(0)/(0.08*jet_DL1r_pc->at(0)+0.92*jet_DL1r_pu->at(0)));
+		double jet_DL1r_subleading = log(jet_DL1r_pb->at(1)/(0.08*jet_DL1r_pc->at(1)+0.92*jet_DL1r_pu->at(1)));
+		if(jet_DL1r_leading<0.8216141 && jet_DL1r_subleading<0.8216141)
+			continue;
+
 		if(jet_pt->at(0)<420)
 			continue;
 		if(fabs(jet_eta->at(0))>2 || fabs(jet_eta->at(1))>2)
@@ -106,31 +112,28 @@ void MakeNtuple(){
 			continue;
 		if(mjj<=1133)
 			continue;
-		double jet_DL1r_leading = log(jet_DL1r_pb->at(0)/(0.08*jet_DL1r_pc->at(0)+0.92*jet_DL1r_pu->at(0)));
-		double jet_DL1r_subleading = log(jet_DL1r_pb->at(1)/(0.08*jet_DL1r_pc->at(1)+0.92*jet_DL1r_pu->at(1)));
-		if(jet_DL1r_leading<0.8216141 && jet_DL1r_subleading<0.8216141)
-			continue;
+
 		region.push_back(1100);
 		if(jet_DL1r_leading>0.8216141 && jet_DL1r_subleading>0.8216141)
 			region.push_back(1101);
-*/
+
 
 		// Fill Tree for this event.
 		overlap->Fill();
 
 		jet_pt->clear();
-//		jet_eta->clear();
-//		jet_DL1r_pb->clear();
-//		jet_DL1r_pc->clear();
-//		jet_DL1r_pu->clear();
+		jet_eta->clear();
+		jet_DL1r_pb->clear();
+		jet_DL1r_pc->clear();
+		jet_DL1r_pu->clear();
 
 	}
 
 //	overlap->Scan("*");
 
-	cout << "pt = " << Npt << endl;
-	cout << "ystar = " << Nystar << endl;
-	cout << "mjj = " << Nmjj << endl;
+//	cout << "pt = " << Npt << endl;
+//	cout << "ystar = " << Nystar << endl;
+//	cout << "mjj = " << Nmjj << endl;
 
 	output->cd();
 	overlap->Write();

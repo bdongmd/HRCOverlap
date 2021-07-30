@@ -3,5 +3,5 @@ arguments  = $(ClusterId)$(ProcId)
 output     = log/sub.$(ClusterId)$(ProcId).out
 error      = log/sub.$(ClusterId)$(ProcId).err
 log        = log/sub.$(ClusterId)$(ProcId).log
-+JobFlavour = "tomorrow"
++JobFlavour = "nextweek"
 queue

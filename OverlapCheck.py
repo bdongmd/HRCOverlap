@@ -29,11 +29,13 @@ tree.Branch('m_jj', m_jj, 'm_jj/F')
 
 diblist = np.empty([dibjetTree.GetEntries(), 2], dtype=np.int64)
 for i in range(0,dibjetTree.GetEntries()):
-	dibjetTree.GetEntry(i)
-	tmplist =  [getattr(dibjetTree, 'run_number'), getattr(dibjetTree, 'event_number')]
-	diblist[i] = tmplist
 	if i % 100000 == 0:
 		print('processed {} events'.format(i))
+	dibjetTree.GetEntry(i)
+	if (len(getattr(dibjetTree, 'region')) == 1):
+		continue
+	tmplist =  [getattr(dibjetTree, 'run_number'), getattr(dibjetTree, 'event_number')]
+	diblist[i] = tmplist
 f_dibjet.Close()
 
 diblist = diblist.tolist()
@@ -41,9 +43,8 @@ for i in range(0, dijetTree.GetEntries()):
 	dijetTree.GetEntry(i)
 	tmplist =  [getattr(dijetTree, 'run_number'), getattr(dijetTree, 'event_number')]
 	if i % 100000 == 0:
-		print('{}: processed {} events'.format(datetime.now().strftime('%H:%M:%S'),i))
+		print('{}: processed {} / {} events'.format(datetime.now().strftime('%H:%M:%S'),i, dijetTree.GetEntries()))
 	if tmplist in diblist:
-		print("kicking out an event")
 		continue
 	run_number[0] = getattr(dijetTree, 'run_number')
 	event_number[0] =  getattr(dijetTree, 'event_number')
