@@ -27,7 +27,7 @@ for line in lines:
 	tmplist = [int(tmplist[0]), int(tmplist[1])]
 	overlapList[i_line] = tmplist
 	i_line = i_line + 1
-print(i_lines)
+
 if not isDib:
 	for line in diblines:
 		tmplist = line.rstrip().split(',')
