@@ -14,10 +14,13 @@ isDib2bchannel = False
 f_txt = open('overlapList/DijetOverlaps.txt', 'r')
 lines = f_txt.readlines()
 
-f_dib_txt = open('', 'r')
-diblines = f_dib_txt.readlines()
+if isDib:
+	overlapList = np.empty([len(lines), 2], dtype=np.int64)
+else:
+	f_dib_txt = open('', 'r')
+	diblines = f_dib_txt.readlines()
+	overlapList = np.empty([len(lines)+len(diblines), 2], dtype=np.int64)
 
-overlapList = np.empty([len(lines)+len(diblines), 2], dtype=np.int64)
 i_line = 0
 for line in lines:
 	tmplist = line.rstrip().split(',')
@@ -25,11 +28,12 @@ for line in lines:
 	overlapList[i_line] = tmplist
 	i_line = i_line + 1
 print(i_lines)
-for line in diblines:
-	tmplist = line.rstrip().split(',')
-	tmplist = [int(tmplist[0]), int(tmplist[1])]
-	overlapList[i_line] = tmplist
-	i_line = i_line + 1
+if not isDib:
+	for line in diblines:
+		tmplist = line.rstrip().split(',')
+		tmplist = [int(tmplist[0]), int(tmplist[1])]
+		overlapList[i_line] = tmplist
+		i_line = i_line + 1
 overlapList = overlapList.tolist()
 
 f_output = ROOT.TFile.Open(args.output, 'RECREATE')
