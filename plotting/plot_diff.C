@@ -8,15 +8,22 @@
 #include "/afs/cern.ch/work/b/bdong/macros/AtlasStyle.C"
 #include "/afs/cern.ch/work/b/bdong/macros/AtlasUtils.C"
 
+bool runDib = true
+
 void plot_diff(){
 
-	const double mjj_bins[] = {1133, 1166, 1200, 1234, 1269, 1305, 1341, 1378, 1416, 1454, 1493, 1533, 1573, 1614, 1656, 1698, 1741, 1785, 1830, 1875, 1921, 1968, 2016, 2065, 2114, 2164, 2215, 2267, 2320, 2374, 2429, 2485, 2542, 2600, 2659, 2719, 2780, 2842, 2905, 2969, 3034, 3100, 3167, 3235, 3305, 3376, 3448, 3521, 3596, 3672, 3749, 3827, 3907, 3988, 4070, 4154, 4239, 4326, 4414, 4504, 4595, 4688, 4782, 4878, 4975, 5074, 5175, 5277, 5381, 5487, 5595, 5705, 5817, 5931, 6047, 6165, 6285};
+	if (runDib){
+		const double mjj_bins[] = {1133, 1166, 1200, 1234, 1269, 1305, 1341, 1378, 1416, 1454, 1493, 1533, 1573, 1614, 1656, 1698, 1741, 1785, 1830, 1875, 1921, 1968, 2016, 2065, 2114, 2164, 2215, 2267, 2320, 2374, 2429, 2485, 2542, 2600, 2659, 2719, 2780, 2842, 2905, 2969, 3034, 3100, 3167, 3235, 3305, 3376, 3448, 3521, 3596, 3672, 3749, 3827, 3907, 3988, 4070, 4154, 4239, 4326, 4414, 4504, 4595, 4688, 4782, 4878, 4975, 5074, 5175, 5277, 5381, 5487, 5595, 5705, 5817, 5931, 6047, 6165, 6285};
+	} else{
+		const double mjj_bins[] = {1100, 1133, 1166, 1200, 1234, 1269, 1305, 1341, 1378, 1416, 1454, 1493, 1533, 1573, 1614, 1656, 1698, 1741, 1785, 1830, 1875, 1921, 1968, 2016, 2065, 2114, 2164, 2215, 2267, 2320, 2374, 2429, 2485, 2542, 2600, 2659, 2719, 2780, 2842, 2905, 2969, 3034, 3100, 3167, 3235, 3305, 3376, 3448, 3521, 3596, 3672, 3749, 3827, 3907, 3988, 4070, 4154, 4239, 4326, 4414, 4504, 4595, 4688, 4782, 4878, 4975, 5074, 5175, 5277, 5381, 5487, 5595, 5705, 5817, 5931, 6047, 6165, 6285, 6407, 6531, 6658, 6787, 6918, 7052, 7188, 7326, 7467, 7610, 7756, 7904, 8055, 8208, 8364, 8523, 8685, 8850, 9019};
+	}
+
 	const int mjj_nbins = sizeof(mjj_bins)/sizeof(mjj_bins[0]);
 
 	TH1D *h_mjj_removed = new TH1D("mjj_removed", "mjj_removed", mjj_nbins-1, &mjj_bins[0]);
 	TH1D *h_mjj_original = new TH1D("mjj_original", "mjj_original", mjj_nbins-1, &mjj_bins[0]);
 
-	TFile *f_original = new TFile("../inputData/FunRun2_dib_original.root", "READ");
+	TFile *f_original = new TFile("../inputData/FullRun2_dib_original.root", "READ");
 	TFile *f_removed = new TFile("../output/FullRun2_dibjet_2btag.root", "READ");
 
 	TTree *t_original = (TTree*)f_original->Get("overlap");
@@ -31,6 +38,7 @@ void plot_diff(){
 
 	for (int i_entry =0; i_entry<t_original->GetEntries(); i_entry++){
 		t_original->GetEntry(i_entry);
+		//h_mjj_original->Fill(original_mjj);
 		if (region->size()==2){
 			h_mjj_original->Fill(original_mjj);
 		}
